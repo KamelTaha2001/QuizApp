@@ -1,6 +1,7 @@
 package com.kamel.quizapp
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
+import androidx.appcompat.widget.AppCompatEditText
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,12 +22,17 @@ class QuestionFragment : Fragment() {
     var ivFlag : ImageView? = null
     var rvAnswers : RecyclerView? = null
     var btnNext : AppCompatButton? = null
+    val finishClickListener = View.OnClickListener {
+        QuizManager.moveToNextQuestion()
+        val navController = NavHostFragment.findNavController(this)
+        val action = QuestionFragmentDirections.actionQuestionFragmentToResultFragment(args.name, QuizManager.score)
+        navController.navigate(action)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_question, container, false)
     }
 
@@ -42,13 +50,11 @@ class QuestionFragment : Fragment() {
         btnNext = view.findViewById(R.id.btnNext)
         btnNext?.setOnClickListener {
             QuizManager.moveToNextQuestion()
+            showNextQuestion()
             if (QuizManager.isLastQuestion) {
                 btnNext?.text = getString(R.string.finish)
-                btnNext?.setOnClickListener {
-                    TODO("Move to result screen")
-                }
+                btnNext?.setOnClickListener(finishClickListener)
             }
-            showNextQuestion()
         }
     }
 

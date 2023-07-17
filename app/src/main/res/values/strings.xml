@@ -5,4 +5,8 @@
     <string name="default_question_text">What is the country?</string>
     <string name="next">Next</string>
     <string name="finish">Finish</string>
+    <string name="result">Result</string>
+    <string name="congratulations">Congratulations, </string>
+    <string name="your_score_is">Your score is </string>
+    <string name="retry">Retry</string>
 </resources>

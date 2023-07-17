@@ -1,6 +1,5 @@
 package com.kamel.quizapp
 
-import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.google.gson.Gson
