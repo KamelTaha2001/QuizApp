@@ -1,11 +1,12 @@
 package com.kamel.quizapp
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class AnswersAdapter(private val dataList : List<Answer>) : RecyclerView.Adapter<AnswerViewHolder>() {
+class AnswersAdapter(private var dataList : List<Answer>) : RecyclerView.Adapter<AnswerViewHolder>() {
 
     val data  = ArrayList<Answer>(dataList)
     var currentSelectedAnswer : TextView? = null
@@ -33,5 +34,12 @@ class AnswersAdapter(private val dataList : List<Answer>) : RecyclerView.Adapter
             QuizManager.chooseAnswer(tv, currentSelectedAnswer!!)
             currentSelectedAnswer = tv
         }
+    }
+
+    fun updateDataSet(newData : List<Answer>) {
+        dataList = newData
+        data.clear()
+        data.addAll(dataList)
+        notifyDataSetChanged()
     }
 }

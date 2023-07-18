@@ -1,11 +1,13 @@
 package com.kamel.quizapp
 
+import android.database.Observable
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Adapter
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
@@ -20,9 +22,10 @@ class QuestionFragment : Fragment() {
     val args : QuestionFragmentArgs by navArgs()
     var tvQuestion : TextView? = null
     var ivFlag : ImageView? = null
-    var rvAnswers : RecyclerView? = null
+    private var rvAnswers : RecyclerView? = null
     var btnNext : AppCompatButton? = null
-    val finishClickListener = View.OnClickListener {
+    private var answerAdapter : AnswersAdapter? = null
+    private val finishClickListener = View.OnClickListener {
         QuizManager.moveToNextQuestion()
         val navController = NavHostFragment.findNavController(this)
         val action = QuestionFragmentDirections.actionQuestionFragmentToResultFragment(args.name, QuizManager.score)
@@ -47,6 +50,7 @@ class QuestionFragment : Fragment() {
         ivFlag = view.findViewById(R.id.ivFlag)
         rvAnswers = view.findViewById(R.id.rvAnswers)
         rvAnswers?.layoutManager = LinearLayoutManager(context)
+
         btnNext = view.findViewById(R.id.btnNext)
         btnNext?.setOnClickListener {
             QuizManager.moveToNextQuestion()
@@ -61,6 +65,15 @@ class QuestionFragment : Fragment() {
     private fun showNextQuestion() {
         tvQuestion?.text = getString(QuizManager.questionsList[QuizManager.currentQuestion].questionText)
         ivFlag?.setImageResource(QuizManager.questionsList[QuizManager.currentQuestion].flag)
-        rvAnswers?.adapter = AnswersAdapter(QuizManager.questionsList[QuizManager.currentQuestion].answers)
+        updateAdapterData()
+    }
+
+    private fun updateAdapterData() {
+        if (answerAdapter == null) {
+            answerAdapter = AnswersAdapter(QuizManager.questionsList[QuizManager.currentQuestion].answers)
+            rvAnswers?.adapter = answerAdapter
+        } else {
+            answerAdapter?.updateDataSet(QuizManager.questionsList[QuizManager.currentQuestion].answers)
+        }
     }
 }
